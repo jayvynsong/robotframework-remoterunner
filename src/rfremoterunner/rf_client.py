@@ -11,7 +11,8 @@ from rfremoterunner.utils import normalize_xmlrpc_address, calculate_ts_parent_p
 
 logger = logging.getLogger(__file__)
 DEFAULT_PORT = 1471
-IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r]*)([\\s]+)')
+# IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r]*)([\\s]+)')
+IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r\\s]*)(.+)')
 
 
 class RemoteFrameworkClient:
