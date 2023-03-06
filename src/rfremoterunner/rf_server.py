@@ -10,8 +10,7 @@ from robot.run import run
 
 from rfremoterunner.utils import write_file_to_disk, read_file_from_disk
 
-
-logging.basicConfig(format='%(message)s', level=logging.INFO, stream=sys.stdout)
+logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
 
 DEFAULT_ADDRESS = '0.0.0.0'

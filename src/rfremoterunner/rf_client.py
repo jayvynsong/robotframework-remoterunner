@@ -1,4 +1,5 @@
 import os
+import sys
 import logging
 import re
 import six.moves.xmlrpc_client as xmlrpc_client
@@ -9,6 +10,7 @@ from robot.utils.robotpath import find_file
 
 from rfremoterunner.utils import normalize_xmlrpc_address, calculate_ts_parent_path, read_file_from_disk
 
+logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
 DEFAULT_PORT = 1471
 # IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r]*)([\\s]+)')
