@@ -144,8 +144,8 @@ class RobotFrameworkServer:
 
         for dep_name, dep_data in dependencies.items():
             logger.debug('Writing dependency to disk: %s', full_path)
-            lib_name = dep_name.split(.)[0]
-            zip_ext  = dep_name.split(.)[-1]
+            lib_name = dep_name.split('.')[0]
+            zip_ext  = dep_name.split('.')[-1]
             if zip_ext not in ['zip']:
                 write_file_to_disk(full_path, dep_data)
             else:
