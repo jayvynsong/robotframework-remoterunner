@@ -10,7 +10,7 @@ from robot.utils.robotpath import find_file
 
 from rfremoterunner.utils import normalize_xmlrpc_address, calculate_ts_parent_path, read_file_from_disk
 
-logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
+logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(__name__)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
 DEFAULT_PORT = 1471
 # IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r]*)([\\s]+)')
@@ -110,6 +110,7 @@ class RemoteFrameworkClient:
             # Use the actual filename here rather than suite.name so that we preserve the file extension
             suite_filename = os.path.basename(suite.source)
             self._suites[suite_filename] = self._process_test_suite(suite)
+            logger.debug(f'suite_filename: {suite_filename}')
 
         # Recurse down and process child suites
         for sub_suite in suite.suites:
@@ -136,6 +137,8 @@ class RemoteFrameworkClient:
         # Recursively parse and process all dependencies and return the patched test suite file
         updated_file = self._process_robot_file(suite)
 
+        logger.debug(f'path: {path}')
+        logger.debug(f'updated_file: {updated_file}')
         return {
             'path': path,
             'suite_data': updated_file
@@ -170,6 +173,10 @@ class RemoteFrameworkClient:
             # Check if the current line is a Library or Resource import
             matches = IMPORT_LINE_REGEX.search(line)
             if matches and len(matches.groups()) == 4:
+                logger.debug(f'match group1: {matches.group(1)}')
+                logger.debug(f'match group2: {matches.group(2)}')
+                logger.debug(f'match group3: {matches.group(3)}')
+                logger.debug(f'match group4: {matches.group(4)}')
                 imp_type = matches.group(1)
                 whitespace_sep = matches.group(2)
                 res_path = matches.group(3)
