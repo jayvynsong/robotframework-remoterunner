@@ -8,7 +8,7 @@ import six.moves.xmlrpc_server as xmlrpc_server
 from six import StringIO
 from robot.run import run
 
-from rfremoterunner.utils import write_file_to_disk, read_file_from_disk, write_binary_to_disk, read_binary_to_disk
+from rfremoterunner.utils import write_file_to_disk, read_file_from_disk, write_binary_to_disk, read_binary_from_disk
 
 logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
