@@ -2,6 +2,8 @@ from io import open
 import os
 import re
 import six
+from shutil import make_archive
+from base64 import b64encode, b64decode
 
 
 PORT_INC_REGEX = '.*:[0-9]{1,5}$'
@@ -31,6 +33,26 @@ def read_file_from_disk(path, encoding='utf-8', into_lines=False):
         return file_handle.readlines() if into_lines else file_handle.read()
 
 
+def read_binary_from_disk(path, into_lines=False):
+    """
+    Utility function to read and return a binary from disk
+
+    :param path: Path to the file to read
+    :type path: str
+    :param into_lines: Whether or not to return a list of lines
+    :type into_lines: bool
+
+    :return: Contents of the file
+    :rtype: str
+    """
+    filename = os.path.basename(os.path.normpath(path))
+    zipfile = make_archive(f'{filename}', 'zip', base_dir=f'{path}')
+    with open(zipfile, 'rb') as file_handle:
+        ret =  file_handle.readlines() if into_lines else b64encode(file_handle.read())
+        file_handle.close()
+        os.remove(zipfile)
+        return ret
+
 def write_file_to_disk(path, file_contents, encoding='utf-8'):
     """
     Utility function to write a file to disk
@@ -45,6 +67,22 @@ def write_file_to_disk(path, file_contents, encoding='utf-8'):
     with open(path, 'w', encoding=encoding) as file_handle:
         file_handle.write(unicode(file_contents))
 
+
+def write_binary_to_disk(path, file_contents):
+    """
+    Utility function to write a binary to disk
+
+    :param path: Path to write to
+    :type path: str
+    :param file_contents: Contents of the file
+    :type file_contents: str | unicode
+    """
+    filename = os.path.basename(os.path.normpath(path))
+    zipfile = make_archive(f'{filename}', 'zip', base_dir=f'{path}')
+    with open(zipfile, 'wb') as file_handle:
+        file_handle.write(b64decode(file_contents))
+        file_handle.close()
+    os.remove(zipfile)
 
 def normalize_xmlrpc_address(address, default_port):
     """

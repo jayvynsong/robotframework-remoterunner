@@ -8,7 +8,7 @@ import six.moves.xmlrpc_server as xmlrpc_server
 from six import StringIO
 from robot.run import run
 
-from rfremoterunner.utils import write_file_to_disk, read_file_from_disk
+from rfremoterunner.utils import write_file_to_disk, read_file_from_disk, write_binary_to_disk, read_binary_to_disk
 
 logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
@@ -143,9 +143,14 @@ class RobotFrameworkServer:
             write_file_to_disk(full_path, suite.get('suite_data'))
 
         for dep_name, dep_data in dependencies.items():
-            full_path = os.path.join(workspace_dir, dep_name)
             logger.debug('Writing dependency to disk: %s', full_path)
-            write_file_to_disk(full_path, dep_data)
+            lib_name = dep_name.split(.)[0]
+            zip_ext  = dep_name.split(.)[-1]
+            if zip_ext not in ['zip']:
+                full_path = os.path.join(workspace_dir, lib_name)
+                write_binary_to_disk(full_path, dep_data)
+            else:
+                write_file_to_disk(full_path, dep_data)
 
         return workspace_dir
 

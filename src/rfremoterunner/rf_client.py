@@ -8,13 +8,13 @@ from robot.api import TestSuiteBuilder
 from robot.libraries import STDLIBS
 from robot.utils.robotpath import find_file
 
-from rfremoterunner.utils import normalize_xmlrpc_address, calculate_ts_parent_path, read_file_from_disk
+from rfremoterunner.utils import normalize_xmlrpc_address, calculate_ts_parent_path, read_file_from_disk, read_binary_from_disk
 
 logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
 DEFAULT_PORT = 1471
-IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r]*)([\\s]+)')
-# IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r\\s]*)(.+)')
+# IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r]*)([\\s]+)')
+IMPORT_LINE_REGEX = re.compile('(Resource|Library)([\\s]+)([^[\\n\\r\\s]+)()')
 
 
 class RemoteFrameworkClient:
@@ -197,8 +197,15 @@ class RemoteFrameworkClient:
                     full_path = find_file(res_path, os.path.dirname(file_path), imp_type)
 
                     if imp_type == 'Library':
-                        # If its a Library (python file) then read the data and add to the dependencies
-                        self._dependencies[filename] = read_file_from_disk(full_path)
+                        if os.path.isfile(full_path):
+                            logger.debug(f'{full_path} is a file.')
+                            # If its a Library (python file) then read the data and add to the dependencies
+                            self._dependencies[filename] = read_file_from_disk(full_path)
+                        if os.path.isdir(full_path):
+                            logger.debug(f'{full_path} is a directory.')
+                            # If its a Library (python package under directory) then compress it.
+                            self._dependencies[filename+'.zip'] = read_binary_from_disk(full_path)
+
                     else:
                         # If its a Resource, recurse down and parse it
                         self._process_robot_file(full_path)
