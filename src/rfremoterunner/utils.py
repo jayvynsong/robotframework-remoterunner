@@ -4,7 +4,6 @@ import re
 import six
 from shutil import make_archive, unpack_archive
 from base64 import b64encode, b64decode
-import logging
 
 
 PORT_INC_REGEX = '.*:[0-9]{1,5}$'
