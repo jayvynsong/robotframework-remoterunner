@@ -200,10 +200,12 @@ class RemoteFrameworkClient:
                         if os.path.isfile(full_path):
                             logger.debug(f'{full_path} is a file.')
                             # If its a Library (python file) then read the data and add to the dependencies
+
                             self._dependencies[filename] = read_file_from_disk(full_path)
                         if os.path.isdir(full_path):
                             logger.debug(f'{full_path} is a directory.')
                             # If its a Library (python package under directory) then compress it.
+                            filename = os.path.basename(os.path.normpath(full_path))
                             self._dependencies[filename+'.zip'] = read_binary_from_disk(full_path)
 
                     else:
