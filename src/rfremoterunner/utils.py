@@ -6,9 +6,6 @@ from shutil import make_archive, unpack_archive
 from base64 import b64encode, b64decode
 import logging
 
-logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
-logger = logging.getLogger(__file__)
-logger.setLevel(logging.DEBUG if debug else logging.INFO)
 
 PORT_INC_REGEX = '.*:[0-9]{1,5}$'
 
@@ -33,7 +30,6 @@ def read_file_from_disk(path, encoding='utf-8', into_lines=False):
     :return: Contents of the file
     :rtype: str
     """
-    logger.debug(f'read_file_from_disk - path: {path}')
     with open(path, 'r', encoding=encoding) as file_handle:
         return file_handle.readlines() if into_lines else file_handle.read()
 
@@ -51,7 +47,6 @@ def read_binary_from_disk(path, into_lines=False):
     :rtype: str, Base64 encoded.
     """
     filename = os.path.basename(os.path.normpath(path))
-    logger.debug(f'read_binary_from_disk - filename: {filename}, path: {path}')
     zipfile = make_archive(f'{filename}', 'zip', base_dir=f'{path}')
     with open(zipfile, 'rb') as file_handle:
         ret =  file_handle.readlines() if into_lines else b64encode(file_handle.read())
@@ -70,7 +65,6 @@ def write_file_to_disk(path, file_contents, encoding='utf-8'):
     :param encoding: Encoding of the file
     :type encoding: str
     """
-    logger.debug(f'write_file_to_disk - path: {path}')
     with open(path, 'w', encoding=encoding) as file_handle:
         file_handle.write(unicode(file_contents))
 
@@ -84,7 +78,6 @@ def write_binary_to_disk(path, file_contents):
     :param file_contents: Contents of the file
     :type file_contents: str | unicode
     """
-    logger.debug(f'write_binary_to_disk - path: {path}')
     with open(path, 'wb') as file_handle:
         file_handle.write(b64decode(file_contents))
         file_handle.close()
