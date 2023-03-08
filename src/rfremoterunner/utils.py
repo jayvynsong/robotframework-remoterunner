@@ -3,7 +3,7 @@ import os
 import re
 import six
 from shutil import make_archive, unpack_archive
-from base64 import b64encode, b64decode
+from base64 import encodebytes, decodebytes
 
 
 PORT_INC_REGEX = '.*:[0-9]{1,5}$'
@@ -48,8 +48,7 @@ def read_binary_from_disk(path, into_lines=False):
     filename = os.path.basename(os.path.normpath(path))
     zipfile = make_archive(f'{filename}', 'zip', base_dir=f'{path}')
     with open(zipfile, 'rb') as file_handle:
-        ret =  file_handle.readlines() if into_lines else b64encode(file_handle.read())
-        file_handle.close()
+        ret =  file_handle.readlines() if into_lines else encodebytes(file_handle.read()).decode()
         os.remove(zipfile)
         return ret
 
@@ -78,8 +77,7 @@ def write_binary_to_disk(path, file_contents):
     :type file_contents: str | unicode
     """
     with open(path, 'wb') as file_handle:
-        file_handle.write(b64decode(file_contents))
-        file_handle.close()
+        file_handle.write(decodebytes(file_contents))
     unpack_archive(path, format='zip')
 
 def normalize_xmlrpc_address(address, default_port):

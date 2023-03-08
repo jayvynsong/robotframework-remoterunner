@@ -195,17 +195,17 @@ class RemoteFrameworkClient:
                         and res_path.strip() not in STDLIBS:
                     # Find the actual file path
                     full_path = find_file(res_path, os.path.dirname(file_path), imp_type)
+                    logger.debug(f'full_path:{full_path}.')
+                    logger.debug(f'filename:{filename}.')
 
                     if imp_type == 'Library':
                         if os.path.isfile(full_path):
                             logger.debug(f'{full_path} is a file.')
                             # If its a Library (python file) then read the data and add to the dependencies
-
                             self._dependencies[filename] = read_file_from_disk(full_path)
                         if os.path.isdir(full_path):
                             logger.debug(f'{full_path} is a directory.')
                             # If its a Library (python package under directory) then compress it.
-                            filename = os.path.basename(os.path.normpath(full_path))
                             self._dependencies[filename+'.zip'] = read_binary_from_disk(full_path)
 
                     else:
