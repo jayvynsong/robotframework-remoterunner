@@ -2,7 +2,7 @@ from io import open
 import os
 import re
 import six
-from shutil import make_archive, unpack_archive
+from shutil import make_archive, unpack_archive, copytree
 from base64 import encodebytes, decodebytes
 
 
@@ -45,9 +45,7 @@ def read_binary_from_disk(path, into_lines=False):
     :return: Contents of the file
     :rtype: str, Base64 encoded.
     """
-    old_cwd = os.getcwd()
-    os.chdir(os.path.normpath(path).rstrip('filename'))
-
+    copytree(path, '.')
     filename = os.path.basename(os.path.normpath(path))
     zipfile = make_archive(f'{filename}', 'zip', base_dir=f'{filename}')
     with open(zipfile, 'rb') as file_handle:
