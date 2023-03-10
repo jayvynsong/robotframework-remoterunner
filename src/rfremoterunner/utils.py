@@ -45,9 +45,9 @@ def read_binary_from_disk(path, into_lines=False):
     :return: Contents of the file
     :rtype: str, Base64 encoded.
     """
-    copytree(path, '.')
-    filename = os.path.basename(os.path.normpath(path))
-    zipfile = make_archive(f'{filename}', 'zip', base_dir=f'{filename}')
+    filename    = os.path.basename(os.path.normpath(path))
+    father_path = os.path.normpath(path).rstrip(f'{filename}')
+    zipfile = make_archive(f'{filename}', 'zip', root_dir=f'{father_path}', base_dir=f'{filename}')
     with open(zipfile, 'rb') as file_handle:
         ret =  file_handle.readlines() if into_lines else encodebytes(file_handle.read()).decode()
         os.remove(zipfile)
@@ -78,7 +78,7 @@ def write_binary_to_disk(path, file_contents):
     :type file_contents: str | unicode
     """
     with open(path+'.zip', 'wb') as file_handle:
-        file_handle.write(decodebytes(file_contents))
+        file_handle.write(decodebytes(file_contents.encode()))
     unpack_archive(path+'.zip', format='zip')
 
 def normalize_xmlrpc_address(address, default_port):
