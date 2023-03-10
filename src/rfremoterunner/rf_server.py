@@ -148,9 +148,11 @@ class RobotFrameworkServer:
             zip_ext  = dep_name.split('.')[-1]
             if zip_ext not in ['zip']:
                 write_file_to_disk(full_path, dep_data)
+                logger.debug('Library [independant     file] encoded:\n%s' % dep_data)
             else:
                 full_path = os.path.join(workspace_dir, lib_name)
                 write_binary_to_disk(full_path, dep_data)
+                logger.debug('Library [package in directory] encoded:\n%s' % dep_data)
 
         return workspace_dir
 
