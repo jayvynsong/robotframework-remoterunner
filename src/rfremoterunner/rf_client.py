@@ -10,7 +10,7 @@ from robot.utils.robotpath import find_file
 
 from rfremoterunner.utils import normalize_xmlrpc_address, calculate_ts_parent_path, read_file_from_disk, read_binary_from_disk
 
-logging.basicConfig(format='%(asctime)-15s  %(levelname)-10s  %(funcName)-10s%(lineno)-5s) %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
+logging.basicConfig(format='%(created)-10f %(levelname)-5s %(funcName)-.25s %(lineno)5s %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
 DEFAULT_PORT = 1471
 IMPORT_LINE_REGEX = re.compile('^(Resource|Library)([\\s]+)([^[\\n\\r\\s]+)([\\s]+.*)')
