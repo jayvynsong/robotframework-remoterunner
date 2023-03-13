@@ -6,7 +6,7 @@ from rfremoterunner.utils import write_file_to_disk
 from rfremoterunner.executor_argparser import ExecutorArgumentParser
 from rfremoterunner.rf_client import RemoteFrameworkClient
 
-logging.basicConfig(format='%(created)-10f %(levelname)-5s %(funcName)-.25s %(lineno)5s %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
+logging.basicConfig(format='%(created)-10f %(levelname)-5s %(funcName)-22.20s %(lineno)5s %(message)s', level=logging.INFO, filename=f'{__name__}.log' )
 logger = logging.getLogger(__file__)
 
 
