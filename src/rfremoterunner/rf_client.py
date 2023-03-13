@@ -185,7 +185,7 @@ class RemoteFrameworkClient:
                 line_ending = matches.group(4)
 
                 # Rebuild the updated line and append
-                modified_file_lines.append(imp_type + whitespace_sep + filename + line_ending)
+                modified_file_lines.append(imp_type + whitespace_sep + res_path + line_ending)
 
                 # If this not a dependency we've already dealt with and not a built-in robot library
                 # (e.g. robot.libraries.Process)
@@ -198,6 +198,19 @@ class RemoteFrameworkClient:
                     logger.debug(f'filename:{filename}.')
 
                     if imp_type == 'Library':
+                        if os.path.isfile(full_path):
+                            logger.debug(f'{full_path} is a file.')
+                            # If its a Library (python file) then read the data and add to the dependencies
+                            self._dependencies[filename] = read_file_from_disk(full_path)
+                            logger.debug('Library encoded:\n%s'%read_file_from_disk(full_path))
+                        if os.path.isdir(full_path):
+                            logger.debug(f'{full_path} is a directory.')
+                            # If its a Library (python package under directory) then compress it.
+                            self._dependencies[filename+'.zip'] = read_binary_from_disk(full_path)
+                            logger.debug('Library encoded:\n%s'%read_binary_from_disk(full_path))
+
+                    elif imp_type == 'Resource':
+                        # If its a Resource, recurse down and parse it
                         if os.path.isfile(full_path):
                             logger.debug(f'{full_path} is a file.')
                             # If its a Library (python file) then read the data and add to the dependencies

@@ -135,6 +135,7 @@ class RobotFrameworkServer:
         logger.debug('Created workspace at: %s', workspace_dir)
 
         for suite_name, suite in test_suites.items():
+            logger.debug('suite_name: %s', suite_name)
             full_dir = os.path.join(workspace_dir, suite.get('path'))
             if not os.path.exists(full_dir):
                 os.makedirs(full_dir)
@@ -143,14 +144,16 @@ class RobotFrameworkServer:
             write_file_to_disk(full_path, suite.get('suite_data'))
 
         for dep_name, dep_data in dependencies.items():
-            logger.debug('Writing dependency to disk: %s', full_path)
+            logger.debug('dep_name: %s', dep_name)
             lib_name = dep_name.split('.')[0]
             zip_ext  = dep_name.split('.')[-1]
             if zip_ext not in ['zip']:
+                logger.debug('Writing dependency to disk: %s', full_path)
                 write_file_to_disk(full_path, dep_data)
                 logger.debug('Library [independant     file] encoded:\n%s' % dep_data)
             else:
                 full_path = os.path.join(workspace_dir, lib_name)
+                logger.debug('Writing dependency to disk: %s', full_path)
                 write_binary_to_disk(full_path, dep_data)
                 logger.debug('Library [package in directory] encoded:\n%s' % dep_data)
 
